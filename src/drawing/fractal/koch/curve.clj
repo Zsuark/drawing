@@ -1,10 +1,14 @@
 (ns drawing.fractal.koch.curve
-  (:require [quil.core :as q :include-macros true]
+  (:require [quil.core :as q]
             [quil.middleware :as m]
             [drawing.fractal.koch.snowflake :as koch]))
 
 (def sWidth  500)
 (def sHeight 200)
+
+(def fps          0.6)
+(def framePause   5)
+(def secondsPause (* fps framePause))
 
 
 (defn setup-curve
@@ -22,16 +26,20 @@
   [state]
   (let [firstLine (first (:lines state))
         length    (koch/distance firstLine)]
-    #_ "if the lines are too small, restart"
+    #_ "if the lines are too small, pause and restart"
     (if (> length 3)
       (koch/update-state state)
-      (do (q/no-loop) state))))
+      (let [pause (:pause state)]
+        (if (> pause 0)
+          (assoc state :pause (dec pause))
+          (assoc (setup-curve) :pause secondsPause))))))
+
 
 (defn setup
   "set frame rate and setup state"
   []
-  (q/frame-rate 0.6)
-  (setup-curve))
+  (q/frame-rate fps)
+  (assoc (setup-curve) :pause secondsPause))
 
 (defn run
   [host]

@@ -1,5 +1,5 @@
 (ns drawing.fractal.koch.snowflake
-  (:require [quil.core :as q :include-macros true]
+  (:require [quil.core :as q]
             [quil.middleware :as m]))
 
 

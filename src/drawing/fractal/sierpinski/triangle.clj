@@ -1,6 +1,6 @@
 ; Sierpinski Triangle Fractal
 (ns drawing.fractal.sierpinski.triangle
-  (:require [quil.core :as q :include-macros true]
+  (:require [quil.core :as q]
             [quil.middleware :as m]))
 
 ; How many frames to pause at end of animation before restarting

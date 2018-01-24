@@ -1,6 +1,6 @@
 ; Sierpinski Carpet Fractal
 (ns drawing.fractal.sierpinski.carpet
-  (:require [quil.core :as q :include-macros true]
+  (:require [quil.core :as q]
             [quil.middleware :as m]))
 
 ; How many frames to pause at end of animation before restarting
@@ -16,24 +16,24 @@
 
 (defn divideSquare
   "
-  Divides a given square into five (six with the middle square
+  Divides a given square into eight (nine with the middle square
   missing).
   Input: Square - vector of two points and a height [x y h]
-  Output: Five squares in a vector
+  Output: Eight squares in a vector
   "
   [Square]
-  (let
-    [[x y h] Square
-     size    (/ h 3)
-     x1      x
-     x2      (+ x1 size)
-     x3      (+ x2 size)
-     y1      y
-     y2      (+ y1 size)
-     y3      (+ y2 size)]
-    [[x1 y1 size][x2 y1 size][x3 y1 size]
-     [x1 y2 size]            [x3 y2 size]
-     [x1 y3 size][x2 y3 size][x3 y3 size]]))
+  (let [[x y h] Square
+        height  (/ h 3)
+        x1      x
+        x2      (+ x1 height)
+        x3      (+ x2 height)
+        y1      y
+        y2      (+ y1 height)
+        y3      (+ y2 height)]
+    [[ x1 y1 height ][ x2 y1 height ][ x3 y1 height ]
+     [ x1 y2 height ]                [ x3 y2 height ]
+     [ x1 y3 height ][ x2 y3 height ][ x3 y3 height ]]))
+
 
 ; use the height as the width with q/rect to make a square
 (defn drawSquare
@@ -85,9 +85,9 @@
            (mapcat divideSquare  (:squares state)))
          (if (> (:pause state) 0)
            (update state :pause dec)
-             (hash-map
-               :squares (vector (setup-square))
-               :pause pauseFrames)))))
+           (hash-map
+             :squares (vector (setup-square))
+             :pause pauseFrames)))))
 
 (defn draw-state
   "Redraw the screen according to state"
