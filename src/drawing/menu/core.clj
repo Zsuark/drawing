@@ -2,15 +2,13 @@
   (:import
     [javafx.application Application]
     [javafx.scene Scene]
-    [javafx.scene.control Button Label TextField PasswordField]
+    [javafx.scene.control Button]
     [javafx.scene.layout GridPane]
-    [javafx.event ActionEvent EventHandler]
-    [javafx.geometry Pos Insets]
-    [javafx.scene.text Font FontWeight Text])
+    [javafx.event EventHandler]
+    [javafx.geometry Pos Insets])
   (:gen-class :main true
               :extends javafx.application.Application))
 
-;     [javafx.stage Stage]
 
 (def sketches
   (list
@@ -40,7 +38,7 @@
 
 (defn -start [this ^javafx.stage.Stage primaryStage]
   (let [grid (doto (GridPane.)
-               (.setAlignment (Pos/CENTER))
+               (.setAlignment Pos/CENTER)
                (.setHgap 20)
                (.setVgap 15)
                (.setPadding (Insets. 25 25 25 25))
@@ -53,7 +51,6 @@
                                        (handle [event]
                                          (run-drawing ns-string)))))]
                      (.add % button col row)))))
-
         scene (Scene. grid 550 250)]
     (doto primaryStage
       (.setTitle "Zsuark Quil Drawings")
