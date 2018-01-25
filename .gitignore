@@ -9,3 +9,4 @@ pom.xml.asc
 /.nrepl-port
 /public/js
 .DS_Store
+hs_err_pid*

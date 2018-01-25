@@ -25,6 +25,8 @@ Use Leiningen to run the code.
 
 `lein run` will run a javaFX-based menu for you to choose which quil sketch you would like to view.
 
+### Options for lein run
+
  - `lein run`
  - `lein run -m drawing.circle.fish-scale-pattern`
  - `lein run -m drawing.circle.modulo-multiplication`
@@ -42,7 +44,15 @@ Use Leiningen to run the code.
  - `lein run -m drawing.fractal.dragon2`
  - `lein run -m drawing.fractal.dragon3`
 
-You may also require and run the main classes from a REPL - `lein repl`.
+You may also require and run the sketches from a REPL.
+
+## Some Known Problems
+
+- Using the quit keyboard-shortcut (e.g. cmd-Q on Mac) on a sketch window generates a JVM runtime error
+  - Similar error when you quit on the menu window with a sketch open
+- Setting a title in a sketch has no effect. The sketch window is always titled "Applet".
+- Code needs to be reviewed and blogged about
+- Some fractals are named incorrectly
 
 ## License
 
