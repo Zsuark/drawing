@@ -1,10 +1,10 @@
 # drawing
 
-Software toys - simple drawings and play with Clojure and Quil. This repository is incomplete, and is supplementary to my blog. If you are looking for perfection, please look elsewhere.
+Software toys - simple drawings and play with Clojure and Quil. This repository is incomplete, and is supplementary to my blog. **If you are looking for perfection, please look elsewhere.**
 
 This software is released "as is" with no guarantees whatsoever.
 
-The code is not perfect, please don't expect it to be. The point is to have some code to start with, and see how we can fix and improve it over time.
+The code is not perfect, please don't expect it to be. The point is to have some working code to start with, and see how we can fix and improve it over time.
 
 I will be discussing this software on [my blog - https://github.io/Zsuark](https://github.io/Zsuark). 
 
@@ -21,7 +21,9 @@ Also see:
 
 ## Usage
 
-Use Leiningen to run the code. `lein run` will run whatever is set as the main class (currently Koch's Snowflake - `drawing.fractal.koch.snowflake`).
+Use Leiningen to run the code.
+
+`lein run` will run a javaFX-based menu for you to choose which quil sketch you would like to view.
 
  - `lein run`
  - `lein run -m drawing.circle.fish-scale-pattern`
@@ -45,6 +47,7 @@ You may also require and run the main classes from a REPL - `lein repl`.
 ## License
 
 Copyright © 2018 Raphael Krausz
+
  - Find me on [GitHub http://github.com/Zsuark](http://github.com/Zsuark)
  - Find me on [BitBucket http://bitbucket.com/Zsuark](http://bitbucket.com/Zsuark)
 
