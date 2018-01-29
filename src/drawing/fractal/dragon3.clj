@@ -12,11 +12,11 @@
 (def sWidth  650)
 (def sHeight 650)
 
-(def max-iterations  "Maximum number of iterations before resetting" 34)
+(def max-iterations  "Maximum number of iterations before resetting" 10)
 (def fps "Frames per second to try to run at" 1)
 (def pause-frames "Additional frames to pause for at the end" 5)
 
-(def unit-length 10)
+(def unit-length 2)
 (def x-origin (int (/ sWidth 2)))
 (def y-origin (int (/ sHeight 2)))
 
