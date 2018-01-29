@@ -20,7 +20,7 @@
     [2 1 "Sierpinski Carpet"     "drawing.fractal.sierpinski.carpet"]
     [0 2 "Sierpinski Play"       "drawing.fractal.sierpinski.play"]
     [1 2 "Sierpinski Snowflake"  "drawing.fractal.sierpinski.snowflake"]
-    [2 2 "Sierpinski Triange"    "drawing.fractal.sierpinski.triangle"]
+    [2 2 "Sierpinski Triangle"    "drawing.fractal.sierpinski.triangle"]
     [0 3 "Wallis Seive"          "drawing.fractal.wallis.seive"]
     [1 3 "Wallis Seive-Cross"    "drawing.fractal.wallis.seive-cross"]
     [2 3 "Wallis Seive-Lattice"  "drawing.fractal.wallis.seive-lattice"]
