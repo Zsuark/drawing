@@ -16,6 +16,11 @@
   - the hole is between 1 and 5 units wide (each unit is 10 currently)
   
   - With every third apple, a new wall is generated with a new hole
+  
+  - Apples appear according to random chance
+  - When there are no apples, each update gives a 1 in 5 chance of an apple appearing
+  - Whtere are apples there is a 1 in (number of apples * 200) chance
+  of a new apple appearing
   ")
 
 (def high-score (atom 0))
@@ -23,6 +28,9 @@
 ; possible directions
 (def directions (sorted-set :up :down :left :right))
 
+; Screen/sketch dimensions
+(def width  500)
+(def height 300)
 
 (defn random-direction []
   (get (into [] directions) (rand-int 4)))
@@ -33,13 +41,13 @@
   Returns a list of border coordinates.
   "
   []
-  (for [x (range 0 (q/width) 10)
-        y (range 0 (q/height) 10)
+  (for [x (range 0 width 10)
+        y (range 0 height 10)
         :when (or
                 (or (= y 0)
-                    (= y (- (q/height) 10)))
+                    (= y (- height 10)))
                 (or (= x 0)
-                    (= x (- (q/width) 10))))]
+                    (= x (- width  10))))]
     [x y]))
 
 (defn generate-holes
@@ -55,7 +63,7 @@
                            (inc
                              (rand-int
                                (- 
-                                 (/ (if hole-is-horizontal (q/width) (q/height)) 10)
+                                 (/ (if hole-is-horizontal width height) 10)
                                  (+ 2 hole-size)))))
         hole-coordinates   (set
                              (for [x (if hole-is-horizontal
@@ -63,9 +71,9 @@
                                          coordinate
                                          (+ coordinate (* 10 hole-size))
                                          10)
-                                       (list 0 (- (q/width) 10)))
+                                       (list 0 (- width 10)))
                                    y (if hole-is-horizontal
-                                       (list 0 (- (q/height) 10))
+                                       (list 0 (- height 10))
                                        (range
                                          coordinate
                                          (+ coordinate (* 10 hole-size))
@@ -85,8 +93,8 @@
   (let [direction     (random-direction)
         initial-state {
                        :snake (list
-                                [(- (/ (q/width) 2)  (* (rand-int 2) 10))
-                                 (- (/ (q/height) 2) (* (rand-int 2) 10)) ])
+                                [(- (/ width 2)  (* (rand-int 2) 10))
+                                 (- (/ height 2) (* (rand-int 2) 10)) ])
                        
                        :direction      direction
                        :last-direction direction
@@ -100,18 +108,17 @@
 
 (def all-grid-coordinates
   "A set of all possible grid coordinates"
-  (memoize
-    (fn
-      [width height]
-      (set
-        (for [y (range 0 height 10)
-              x (range 0 width  10)]
-          [x y])))))
+  (set
+    (for [x (range 0 width  10)
+          y (range 0 height 10)]
+      [x y])))
 
 
-(defn add-apple [state]
+(defn add-apple
+  "Adds an apple to a random available location on the screen"
+  [state]
   (let [possible-positions (vec
-                             (-> (all-grid-coordinates (q/width) (q/height))
+                             (-> all-grid-coordinates
                                  (difference (:apples state))
                                  (difference (:wall state))
                                  (difference (set (:snake state)))))
@@ -157,7 +164,7 @@
       [0xffbc5148]
       
       (q/text (str "SCORE: " (:score state)) 15 -1 200 15)
-      (q/text (str "HIGH SCORE: " @high-score) 15 (- (q/height) 12) 200 (q/height))
+      (q/text (str "HIGH SCORE: " @high-score) 15 (- height 12) 200 height)
       
       (doseq [[x y] (:apples state)]
         ; We need to offset the apple
@@ -179,7 +186,9 @@
     (q/rect x y 10 10 2)))
 
 
-(defn change-is-legal [new-direction old-direction]
+(defn change-is-legal
+  "Determines if a change in given direction is allowed"
+  [new-direction old-direction]
   (not
     (or 
       ; if any one of these below conditions are true
@@ -195,6 +204,14 @@
       
       (and (= old-direction :down)
            (= new-direction :up)))))
+
+(defn handle-keypress [state event]
+  (let [key (:key event)]
+    (if (and
+          (contains? directions key)
+          (change-is-legal key (:last-direction state)))
+      (assoc-in state [:direction] key)
+      state)))
 
 
 (defn update-apple-state
@@ -265,12 +282,12 @@
   (let [direction       (:direction state)
         [head-x head-y] (first (:snake state))
         new-x           (case direction
-                          :left  (mod (- head-x 10) (q/width))
-                          :right (mod (+ head-x 10) (q/width))
+                          :left  (mod (- head-x 10) width)
+                          :right (mod (+ head-x 10) width)
                           head-x)
         new-y           (case direction
-                          :up   (mod (- head-y 10) (q/height))
-                          :down (mod (+ head-y 10) (q/height))
+                          :up   (mod (- head-y 10) height)
+                          :down (mod (+ head-y 10) height)
                           head-y)        
         is-growing      (> (:growing state) 0)
         new-head        [new-x new-y]                
@@ -294,18 +311,10 @@
 
 
 
-(defn handle-keypress [state event]
-  (let [key (:key event)]
-    (if (and
-          (contains? directions key)
-          (change-is-legal key (:last-direction state)))
-      (assoc-in state [:direction] key)
-      state)))
-
 
 (defn run []
   (q/sketch 
-    :size [500 300]
+    :size [width height]
     :title "Snake Game!"
     :setup setup
     :draw draw
