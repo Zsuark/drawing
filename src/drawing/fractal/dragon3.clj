@@ -1,8 +1,6 @@
 (ns drawing.fractal.dragon3
   (:require [quil.core :as q]
-            [quil.middleware :as m]
-            [clojure.math.numeric-tower :as maths]
-            [clojure.core.match :refer [match]]))
+            [quil.middleware :as m]))
 
 ; Good explanation of the dragon curve:
 ;   - https://bentrubewriter.com/2012/04/25/fractals-you-can-draw-the-dragon-curve-or-the-jurassic-fractal/
