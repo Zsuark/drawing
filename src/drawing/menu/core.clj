@@ -34,9 +34,10 @@
     ["Sierpinski Arrowhead"  "drawing.fractal.sierpinski.arrowhead"]
     ["Sierpinski Carpet"     "drawing.fractal.sierpinski.carpet"]
     ["Sierpinski Triangle"   "drawing.fractal.sierpinski.triangle"]
-    ["Snake!"                "drawing.snake.core"]
     ["Vicsek Fractal"        "drawing.fractal.vicsek"]
-    ["Wallis Seive"          "drawing.fractal.wallis.seive"]))
+    ["Wallis Seive"          "drawing.fractal.wallis.seive"]
+    ["Play Snake!"           "drawing.snake.core"]
+))
 
 (defn -main [& args]
   (Application/launch drawing.menu.core args))
