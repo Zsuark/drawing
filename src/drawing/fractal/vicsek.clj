@@ -1,8 +1,4 @@
-; Wallis Seive Cross - oops!
-; 
-; I made a mistake, but the result is still an interesting
-; fractal (discontinuous fractal?) - can you find out what it is
-(ns drawing.fractal.wallis.seive-lattice
+(ns drawing.fractal.vicsek
   (:require [quil.core :as q]
             [quil.middleware :as m]))
 
@@ -10,56 +6,15 @@
 (def pauseFrames 5)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; The main methods and helpers continue from here.
-;;
-;; The main transformation takes a given square and splits
-;; it into five smaller squares.
-;;
-
 (defn divideSquare
   "
-  Divides a given square into (2i + 1)^2.
-  Input: Square - vector of two points and a height [x y h]
-  Input: i - iteration number (natural number)
-  Output: (2i + 1)^2 squares in a vector
-  NB:
-  - Square side length must be (2i + 1)
-  - As the middle section is removed, we must
-  be able to figure out the mid-point.
-  The intersection of x and y mid-points is the centre
-  section to be removed
-  - hmm.....  i = 1, divisor = 3, 3/2 = 1.5, therefore the 2nd value of
-  X: {1, 2, 3}, Y: {1, 2, 3}. So, square (2, 2) is to be skipped.
-  All possible squares: {(1,1) (1,2) (1, 3) (2,1) (2,2) (2,3)
-  (3,1) (3,2) (3,3)})
-  - i = 1, squares 0,1 and 2,3 remain. Square 1,2 removed
-  - i = 4, divisor 9. Square 4,5 removed
-  - i = 9, divisor 19. Square 9,10 removed.
-  - for any value of i, square i,i+1 is removed
-  
-  - original square 0,0 to 9,9  (aka 0,3)
-  - i = 1, divisor = 3
-  - new-size: 3
-  - new squares
-  (q/rect 0 0 3 3)
-  (q/rect 3 0 3 3)
-  (q/rect 6 0 3 3)
-  
-  (q/rect 0 3 3 3)
-  ; (q/rect 3 3 3 3) REMOVED FOR HOLE
-  (q/rect 6 3 3 3)
-  
-  (q/rect 0 6 3 3)
-  (q/rect 3 6 3 3)
-  (q/rect 6 6 3 3)    
   "
-  [Square i]
-  (let [divisor (inc (* 2 i))
+  [Square]
+  (let [divisor 3
         [x y h] Square
         size    (/ h divisor)
-        x-mid   (+ x (* i size))
-        y-mid   (+ y (* i size))
+        x-mid   (+ x size)
+        y-mid   (+ y size)
         x-range (range x (+ x h) size)
         y-range (range y (+ y h) size)
         newSquares (for [
@@ -121,11 +76,12 @@
     
     So, lets continue if line length is greater than 3, otherwise
     let's reset and start again."
+    ; (println "+++ h:" h)
     (if
-      (> h 6)
+      (>= h 1.5)
       (let [i (inc (:iteration state))
             oldSquares (:squares state)
-            newSquares (mapcat #(divideSquare % i) oldSquares)]
+            newSquares (mapcat divideSquare oldSquares)]
         (assoc state 
           :squares   newSquares
           :iteration i))
@@ -153,8 +109,7 @@
 
 (defn run [host]
   (q/sketch
-    :host host
-    :title "Wallis Seive"
+    :title "Vicsek Fractal"
     :size [sWidth sHeight]
     :setup setup
     :update update-wrapper
@@ -163,4 +118,4 @@
 
 (defn -main
   []
-  (run "sieve"))
+  (run "vicsek"))

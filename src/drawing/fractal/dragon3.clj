@@ -12,7 +12,7 @@
 (def sWidth  650)
 (def sHeight 650)
 
-(def max-iterations  "Maximum number of iterations before resetting" 10)
+(def max-iterations  "Maximum number of iterations before resetting" 17)
 (def fps "Frames per second to try to run at" 1)
 (def pause-frames "Additional frames to pause for at the end" 5)
 
@@ -90,8 +90,7 @@
 
 (defn run [host]
   (q/sketch
-    :host host
-    :title "Dragon"
+    :title "Dragon Curve"
     :size [sWidth sHeight]
     :setup setup
     :update update-state
