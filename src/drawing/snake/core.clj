@@ -1,4 +1,5 @@
 (ns drawing.snake.core
+  (:use [clojure.set :only [difference]])
   (:require [quil.core :as q]
             [quil.middleware :as m]))
 
@@ -97,20 +98,26 @@
     ; (println "initial-state:" initial-state)
     initial-state))
 
+(def all-grid-coordinates
+  "A set of all possible grid coordinates"
+  (memoize
+    (fn
+      [width height]
+      (set
+        (for [y (range 0 height 10)
+              x (range 0 width  10)]
+          [x y])))))
+
+
 (defn add-apple [state]
-  (let [old-apples (:apples state)
-        wall       (:wall state)
-        snake      (set (:snake state))]
-    (loop []
-      (let [x (* (rand-int (/ (q/width)  10)) 10)
-            y (* (rand-int (/ (q/height) 10)) 10)
-            new-apple [x y]]
-        (if (or
-              (contains? old-apples new-apple)
-              (contains? wall new-apple)
-              (contains? snake new-apple))
-          (recur)
-          (update-in state [:apples] #(conj % new-apple)))))))
+  (let [possible-positions (vec
+                             (-> (all-grid-coordinates (q/width) (q/height))
+                                 (difference (:apples state))
+                                 (difference (:wall state))
+                                 (difference (set (:snake state)))))
+        possible-count     (count possible-positions)
+        new-apple          (get possible-positions (rand-int possible-count))]
+    (update state :apples #(conj % new-apple))))
 
 
 
@@ -123,7 +130,7 @@
   (q/stroke-weight 2)
   (q/fill 0xff7bcecc)
   (q/text-font (q/create-font "Arial-BoldMT" 10))
-  (add-apple (init-state)))
+  (init-state))
 
 
 ; draws state it is given to the screen
@@ -166,7 +173,7 @@
     [0xff3090a1]
     (let [[x y] (first (:snake state))]
       (q/rect x y 10 10 4)))
-    
+  
   ; then the body
   (doseq [[x y] (rest (:snake state))]
     (q/rect x y 10 10 2)))
@@ -223,12 +230,12 @@
   Updates and returns state.
   
   If there are no apples, then there is a 1 in 5 chance of adding one.
-  There are apples, then there is a 1 in (number of apples * 100) chance of adding one.
+  There are apples, then there is a 1 in (number of apples * 200) chance of adding one.
   "
   [state snake-head snake-tail]
   (let [apple-count  (count (:apples state))
         adding-apple (zero?
-                       (rand-int (if (zero? apple-count) 5 (* 100 apple-count))))
+                       (rand-int (if (zero? apple-count) 5 (* 200 apple-count))))
         new-state    (-> (if adding-apple
                            (add-apple state)
                            state)
