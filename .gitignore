@@ -11,3 +11,4 @@ pom.xml.asc
 .DS_Store
 hs_err_pid*
 project.sublime-workspace
+figwheel_server.log
